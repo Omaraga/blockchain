@@ -28,14 +28,17 @@ AppAsset::register($this);
 <header class="header_area">
     <?php
     $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
-        ['label' => 'About', 'url' => ['/site/about']],
+        ['label' => 'Басты', 'url' => ['/site/index']],
+        ['label' => 'Жаңалықтар', 'url' => ['/news/index']],
+        ['label' => 'Жұмыстар', 'url' => ['/site/goods']],
     ];
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
-        $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
+
+        $menuItems[] = ['label' => 'Тіркелу', 'url' => ['/site/signup']];
+        $menuItems[] = ['label' => 'Кіру', 'url' => ['/site/login']];
     } else {
-        $menuItems[] = ['label' => 'Logout', 'url' => ['/site/logout']];
+        $menuItems[] = ['label' => 'Менің жұмыстарым', 'url' => ['/goods/index']];
+        $menuItems[] = ['label' => 'Шығу', 'url' => ['/site/logout']];
 //        $menuItems[] = '<li>'
 //            . Html::beginForm(['/site/logout'], 'post', ['class' => 'form-inline'])
 //            . Html::submitButton(
@@ -64,8 +67,8 @@ AppAsset::register($this);
 
 <footer class="footer mt-auto py-3 text-muted">
     <div class="container">
-        <p class="float-left">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
-        <p class="float-right"><?= Yii::powered() ?></p>
+        <p class="float-left">&copy; Blockchain <?= date('Y') ?></p>
+        <p class="float-right">Zhalelov Erzhan</p>
     </div>
 </footer>
 

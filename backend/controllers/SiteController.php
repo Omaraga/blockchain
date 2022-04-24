@@ -2,11 +2,16 @@
 
 namespace backend\controllers;
 
-use common\models\LoginForm;
+use backend\components\AccessRule;
+use backend\models\LoginForm;
+use backend\models\Profile;
+use common\models\Settings;
+use common\models\User;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use yii\web\Controller;
+use backend\components\BaseAdminController as Controller;
+use yii\helpers\ArrayHelper;
 use yii\web\Response;
 
 /**
@@ -19,19 +24,26 @@ class SiteController extends Controller
      */
     public function behaviors()
     {
-        return [
+        return ArrayHelper::merge(parent::behaviors(),[
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
                         'actions' => ['login', 'error'],
                         'allow' => true,
+                        'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['logout', 'index'],
+                        'actions' => ['logout'],
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => [
+                            User::ROLE_DEFAULT_USER,
+                            User::ROLE_MODERATOR,
+                            User::ROLE_ADMIN,
+                            User::ROLE_SUPER_ADMIN,
+                        ],
                     ],
+
                 ],
             ],
             'verbs' => [
@@ -40,7 +52,7 @@ class SiteController extends Controller
                     'logout' => ['post'],
                 ],
             ],
-        ];
+        ]);
     }
 
     /**
@@ -62,7 +74,37 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $model = Settings::find()->one();
+        if (!$model){
+            $model = new Settings();
+        }
+        $model->loadDefaultValues(false);
+        return $this->render('index', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionUpdateSettings(){
+        $model = Settings::find()->one();
+        if (!$model){
+            $model = new Settings();
+        }
+        if (Yii::$app->request->isPost) {
+            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                if ($model->save()){
+                    Yii::$app->session->setFlash('success', 'Изменения сохранены');
+                }else{
+                    Yii::$app->session->setFlash('error', 'Ошибка прим сохранении');
+                }
+                return $this->goHome();
+
+            }
+        }
+        $model->loadDefaultValues(false);
+        return $this->render('update', [
+            'model' => $model,
+        ]);
+
     }
 
     /**
@@ -80,12 +122,30 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            Yii::$app->session->setFlash('success', 'Вы успешно авторизовались');
             return $this->goBack();
         }
 
         $model->password = '';
 
         return $this->render('login', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionProfile(){
+        $model = Profile::findOne(Yii::$app->user->identity->getId());
+        if ($model->load(Yii::$app->request->post())){
+            if ($model->save()){
+                if ($model->save()){
+                    Yii::$app->session->setFlash('success', 'Изменения сохранены');
+                }else{
+                    Yii::$app->session->setFlash('error', 'Ошибка прим сохранении');
+                }
+                return $this->goHome();
+            }
+        }
+        return $this->render('profile', [
             'model' => $model,
         ]);
     }

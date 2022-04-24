@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\models\News;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
@@ -75,7 +76,10 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $newsList = News::find()->limit(3)->all();
+        return $this->render('index',[
+            'newsList' => $newsList,
+        ]);
     }
 
     /**

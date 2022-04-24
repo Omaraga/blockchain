@@ -1,53 +1,38 @@
 <?php
 
-/** @var yii\web\View $this */
+/* @var $this yii\web\View */
+/* @var $model common\models\Settings */
 
-$this->title = 'My Yii Application';
+use yii\widgets\ActiveForm;
+$this->title = 'Настройки сайта';
 ?>
-<div class="site-index">
 
-    <div class="jumbotron text-center bg-transparent">
-        <h1 class="display-4">Congratulations!</h1>
+<section>
+    <?php $form = ActiveForm::begin(); ?>
 
-        <p class="lead">You have successfully created your Yii-powered application.</p>
+    <?= $form->field($model, 'name')->textInput(['maxlength' => true, 'disabled' => true]) ?>
+    <?= $form->field($model, 'url')->textInput(['maxlength' => true,  'disabled' => true]) ?>
+    <div class="form-group field-settings-phoneList">
+        <label class="control-label" for="phone-url">Логотип</label>
+        <br>
+        <img src="<?=$model->url;?><?=$model->logo;?>" alt="" style = "max-width:100px">
+    </div>
+    <?= $form->field($model, 'address')->textInput(['maxlength' => true,  'disabled' => true]) ?>
+    <div class="form-group field-settings-phoneList">
+        <label class="control-label" for="phone-url">Номера телефонов</label>
+        <?foreach ($model->phoneList as $phone):?>
+            <input type="text" class="form-control" name="Settings[phoneList][]" value="<?=$phone;?>" maxlength="255" disabled>
 
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
+        <?endforeach;?>
     </div>
 
-    <div class="body-content">
 
-        <div class="row">
-            <div class="col-lg-4">
-                <h2>Heading</h2>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
 
-                <p><a class="btn btn-outline-secondary" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-outline-secondary" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-outline-secondary" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
-            </div>
-        </div>
-
+    <div class="form-group">
+        <a href="/site/update-settings" class="btn btn-danger">Редактировать</a>
     </div>
-</div>
+
+    <?php ActiveForm::end(); ?>
+</section>
+
