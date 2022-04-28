@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\models\Goods;
 use common\models\News;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
@@ -77,8 +78,10 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $newsList = News::find()->limit(3)->all();
+        $goodList = Goods::find()->limit(12)->all();
         return $this->render('index',[
             'newsList' => $newsList,
+            'goodList' => $goodList,
         ]);
     }
 
@@ -259,5 +262,26 @@ class SiteController extends Controller
         return $this->render('resendVerificationEmail', [
             'model' => $model
         ]);
+    }
+
+    /**
+     * @return string
+     */
+    public function actionGoods(){
+        $goodsList = Goods::find()->all();
+        return $this->render('goods', [
+            'goodsList' => $goodsList,
+        ]);
+    }
+
+    public function actionGoodView(){
+        $good = Yii::$app->request->get('id') ? Goods::findOne((int)Yii::$app->request->get('id')) : null;
+        if ($good){
+            return $this->render('good-view', [
+                'good' => $good,
+            ]);
+        }else{
+            return $this->redirect('/site/goods');
+        }
     }
 }

@@ -38,6 +38,8 @@ AppAsset::register($this);
         $menuItems[] = ['label' => 'Кіру', 'url' => ['/site/login']];
     } else {
         $menuItems[] = ['label' => 'Менің жұмыстарым', 'url' => ['/goods/index']];
+        $menuItems[] = ['label' => 'Менің тапсырыстарым', 'url' => ['/my-request']];
+        $menuItems[] = ['label' => 'Жұмыстарға сұраныс', 'url' => ['/my-request/author']];
         $menuItems[] = ['label' => 'Шығу', 'url' => ['/site/logout']];
 //        $menuItems[] = '<li>'
 //            . Html::beginForm(['/site/logout'], 'post', ['class' => 'form-inline'])

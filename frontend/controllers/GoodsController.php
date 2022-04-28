@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use common\models\Goods;
+use common\models\Request;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -127,7 +128,29 @@ class GoodsController extends Controller
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['/index']);
+    }
+
+    public function actionRequest(){
+        $good = Yii::$app->request->get('id') ? Goods::findOne((int)Yii::$app->request->get('id')) : null;
+        if ($good){
+            $user = Yii::$app->user->identity;
+            $request = Request::find()->where(['good_id' => $good->id, 'user_id' => $user->id, 'status' => Request::STATUS_ACCEPT])->one();
+            if (!$request){
+                $request = new Request();
+                $request->good_id = $good->id;
+                $request->user_id = $user->id;
+                $request->status = Request::STATUS_SEND;
+                $request->author_id = $good->author_id;
+                $request->save();
+                Yii::$app->session->setFlash('info', 'Сұраныс жіберілді!');
+            }else{
+                Yii::$app->session->setFlash('danger', 'Сізде бұл жұмысқа рұқсат бар!');
+            }
+
+        }
+        return $this->redirect('/site/goods');
+
     }
 
     /**
