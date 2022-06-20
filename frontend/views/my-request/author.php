@@ -34,7 +34,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'user_id',
                 'value' => function($data){
                     $author = \common\models\User::findOne($data->user_id);
-                    return $author->getFio();
+                    if ($author){
+                        return $author->getFio();
+                    }else{
+                        return '';
+                    }
+
                 }
             ],
             'code',
